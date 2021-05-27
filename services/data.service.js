@@ -32,13 +32,13 @@ const register=(uname,acno,paswd)=>{
       
     }
    }
-   const login=(accnum,paswd)=>{
+   const login=(req,accnum,paswd)=>{
     let users=accountDetails;
     if(accnum in users )
     {
       if(paswd ==users[accnum]["password"]){
-     currentUser=users[accnum]["username"]
-     //this.saveDetails()
+    req.session.currentUser=users[accnum]
+          //this.saveDetails()
         return{
             statusCode:200,
             status:true,
@@ -65,6 +65,7 @@ const register=(uname,acno,paswd)=>{
     }
    }
    let deposite=(acno,pswd,amount)=>{
+     
     let user=accountDetails;
     if(acno in user){
       if(pswd==user[acno]["password"]){

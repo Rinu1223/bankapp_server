@@ -1,6 +1,42 @@
-const express=require('express')
+const express=require('express'); //import express
 const app=express();
+
 const dataservice=require('./services/data.service'); // import data.service
+
+const session=require('express-session');//import session
+app.use(session({
+  secret:'randomsecurestring',
+  resave:false,
+  saveUninitialzed:false
+}));
+
+////middleware
+app.use((req,res,next)=>{
+  console.log("middleware");
+  next();
+})
+
+//middleware
+const logMiddleWare=(req,res,next)=>{
+  console.log(req.body);
+  next();
+}
+app.use(logMiddleWare);
+
+//authentication middleware
+const authMiddleware=(req,res,next)=>{
+  if(!req.session.currentUser){
+    return res.json({
+      statusCode:401,
+      status:false,
+      message:"please login"
+    })
+  }
+  else{
+    next();
+  }
+}
+
 app.use(express.json()); //parsing json format to object
 app.get('/',(req,res)=>{
     res.status(401).send("THIS IS A GET METHOD")
@@ -16,16 +52,18 @@ const result=dataservice.register(req.body.uname,req.body.acno,req.body.paswd)
 });
 app.post('/login',(req,res)=>{
     //console.log(req.body);
-    const result=dataservice.login(req.body.acno,req.body.paswd)
+    const result=dataservice.login(req,req.body.acno,req.body.paswd)
       res.status(result.statusCode).json(result);  
     });
-    app.post('/deposite',(req,res)=>{
+    
+app.post('/deposite',authMiddleware,(req,res)=>{
         //console.log(req.body);
-        
+      
         const result=dataservice.deposite(req.body.acno,req.body.paswd,req.body.amount)
           res.status(result.statusCode).json(result);  
         });
-        app.post('/withdraw',(req,res)=>{
+        
+app.post('/withdraw',authMiddleware,(req,res)=>{
             //console.log(req.body);
             
             const result=dataservice.withdraw(req.body.acno,req.body.paswd,req.body.amount)
