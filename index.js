@@ -47,13 +47,19 @@ app.post('/',(req,res)=>{
 });
 app.post('/register',(req,res)=>{
 //console.log(req.body);
-const result=dataservice.register(req.body.uname,req.body.acno,req.body.paswd)
-  res.status(result.statusCode).json(result);  
+dataservice.register(req.body.uname,req.body.acno,req.body.paswd)
+.then(result=>{
+  res.status(result.statusCode).json(result); 
+})
+   
 });
 app.post('/login',(req,res)=>{
     //console.log(req.body);
-    const result=dataservice.login(req,req.body.acno,req.body.paswd)
-      res.status(result.statusCode).json(result);  
+    dataservice.login(req,req.body.acno,req.body.paswd)
+    .then(result=>{
+      res.status(result.statusCode).json(result); 
+    })
+       
     });
     
 app.post('/deposite',authMiddleware,(req,res)=>{

@@ -1,3 +1,4 @@
+const db=require('./db');
 let currentUser=""
 let accountDetails = {
     1000: { acno: 1000, actype: "savings", username: "userone", password: "userone", balance: 5000 },
@@ -7,63 +8,56 @@ let accountDetails = {
 }
 
 const register=(uname,acno,paswd)=>{
-    let user=accountDetails;
-    if(acno in user){
-      return {
+    return db.User.findOne({acno})
+    .then(user=>{
+      if(user){
+        return {
           statusCode:422,
           status:false,
          message:"user exit... please login"
       }
-      
-    }
-    else{
-      user[acno]={
-        acno,
-        username:uname,
-        password:paswd,
-        balance:0
       }
-      
-      return{
-        statusCode:200,
-          status:true,
-          message:"Successfully Registered"
-      }
-      
-    }
-   }
-   const login=(req,accnum,paswd)=>{
-    let users=accountDetails;
-    if(accnum in users )
-    {
-      if(paswd ==users[accnum]["password"]){
-    req.session.currentUser=users[accnum]
-          //this.saveDetails()
+      else{
+        const newUser=new db.User({
+          acno,
+          username:uname,
+          password:paswd,
+          balance:0
+        })
+        newUser.save()
         return{
+          statusCode:200,
+            status:true,
+            message:"Successfully Registered"
+        }
+      }
+    })
+  }
+   const login=(req,accnum,paswd)=>{
+     let password=paswd
+     let acno=parseInt(accnum);
+    return db.User.findOne({acno,password})
+    .then(user=>
+      {
+        if(user){
+          req.session.currentUser=user
+          return{
             statusCode:200,
             status:true,
            message:"Successfully login"
         } 
-        
-      }
-      else{
-        
-        return {
+        }
+        else{
+      
+          return {
             statusCode:422,
             status:false,
-           message:"login failed"
+           message:"invalid accont number"
+          }
         }
-      }
+      })
     }
-    else{
-      
-      return {
-        statusCode:422,
-        status:false,
-       message:"invalid accont number"
-      }
-    }
-   }
+   
    let deposite=(acno,pswd,amount)=>{
      
     let user=accountDetails;
