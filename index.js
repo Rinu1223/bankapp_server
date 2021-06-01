@@ -65,15 +65,21 @@ app.post('/login',(req,res)=>{
 app.post('/deposite',authMiddleware,(req,res)=>{
         //console.log(req.body);
       
-        const result=dataservice.deposite(req.body.acno,req.body.paswd,req.body.amount)
-          res.status(result.statusCode).json(result);  
+        dataservice.deposite(req.body.acno,req.body.paswd,req.body.amount)
+        .then(result=>{
+          res.status(result.statusCode).json(result);
+        })
+           
         });
         
 app.post('/withdraw',authMiddleware,(req,res)=>{
             //console.log(req.body);
             
-            const result=dataservice.withdraw(req.body.acno,req.body.paswd,req.body.amount)
-              res.status(result.statusCode).json(result);  
+            dataservice.withdraw(req.body.acno,req.body.paswd,req.body.amount)
+            .then(result=>{
+              res.status(result.statusCode).json(result); 
+            })
+               
             });
 
 //put- update/modify whole
