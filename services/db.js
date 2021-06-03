@@ -3,8 +3,7 @@ const mongoose =require("mongoose") //import mongoose
 //connection string
 mongoose.connect('mongodb://localhost:27017/BankApp',{
 useNewUrlParser:true,
-useUnifiedTopology:true
-
+useUnifiedTopology:true,
 })
 
 //model

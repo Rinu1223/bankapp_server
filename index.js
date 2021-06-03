@@ -2,6 +2,11 @@ const express=require('express'); //import express
 const app=express();
 
 const dataservice=require('./services/data.service'); // import data.service
+const cors=require('cors'); //import cors
+app.use(cors({
+  origin:'http://localhost:4200', //client path 
+  credentials:true //to use cookies
+}))
 
 const session=require('express-session');//import session
 app.use(session({
