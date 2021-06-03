@@ -5,7 +5,7 @@ const dataservice=require('./services/data.service'); // import data.service
 const cors=require('cors'); //import cors
 app.use(cors({
   origin:'http://localhost:4200', //client path 
-  credentials:true //to use cookies
+  credentials:true  //to use cookies
 }))
 
 const session=require('express-session');//import session
@@ -16,17 +16,17 @@ app.use(session({
 }));
 
 ////middleware
-app.use((req,res,next)=>{
-  console.log("middleware");
-  next();
-})
+// app.use((req,res,next)=>{
+//   console.log("middleware");
+//   next();
+// })
 
 //middleware
-const logMiddleWare=(req,res,next)=>{
-  console.log(req.body);
-  next();
-}
-app.use(logMiddleWare);
+// const logMiddleWare=(req,res,next)=>{
+//   console.log(req.body);
+//   next();
+// }
+// app.use(logMiddleWare);
 
 //authentication middleware
 const authMiddleware=(req,res,next)=>{
@@ -68,9 +68,8 @@ app.post('/login',(req,res)=>{
     });
     
 app.post('/deposite',authMiddleware,(req,res)=>{
-        //console.log(req.body);
-      
-        dataservice.deposite(req.body.acno,req.body.paswd,req.body.amount)
+      //console.log(req.body.acno,req.body.password,req.body.amount);
+       dataservice.deposite(req.body.acno,req.body.password,req.body.amount)
         .then(result=>{
           res.status(result.statusCode).json(result);
         })
@@ -80,7 +79,7 @@ app.post('/deposite',authMiddleware,(req,res)=>{
 app.post('/withdraw',authMiddleware,(req,res)=>{
             //console.log(req.body);
             
-            dataservice.withdraw(req.body.acno,req.body.paswd,req.body.amount)
+            dataservice.withdraw(req.body.acno,req.body.password,req.body.amount)
             .then(result=>{
               res.status(result.statusCode).json(result); 
             })

@@ -36,13 +36,11 @@ const register=(uname,acno,paswd)=>{
    const login=(req,accnum,paswd)=>{
      let password=paswd
      let acno=parseInt(accnum);
-     console.log(acno);
-     console.log(password);
-    return db.User.findOne({acno,password})
+     return db.User.findOne({acno,password})
     .then(user=>
       {
         if(user){
-          req.session.currentUser=user
+          req.session.currentUser=user.acno
           return{
             statusCode:200,
             status:true,
@@ -61,12 +59,13 @@ const register=(uname,acno,paswd)=>{
       })
     }
    
-   let deposite=(acno,password,amt)=>{
-     let amount=parseInt(amt);
+   let deposite=(accnum,password,amount)=>{
+    let acno=parseInt(accnum);
+      amount=parseInt(amount);
     return db.User.findOne({acno,password})
     .then(user=>
       {
-        if(!user){
+       if(!user){
           return {
             statusCode:422,
             status:false,
